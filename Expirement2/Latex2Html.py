@@ -3,7 +3,7 @@ import re
 
 def sub_elements(text):
     text = re.sub(r'\\begin{itemize}', r'<ul>', text)
-    text = re.sub(r'\\end{itemize}',r'</ul>', text)
+    text = re.sub(r'\\end{itemize}', r'</ul>', text)
     text = re.sub(r'\\{(.*?)\\}', r'{\1}', text)
     text = re.sub(r'\\item \\texttt{(.+?)}(.+?)\n', r'<li>\1\2</li>', text)
 
@@ -18,13 +18,16 @@ def sub_elements(text):
 
     text = re.sub(r'\\begin{center}', r'<center>', text)
     text = re.sub(r'\\end{center}', r'</center>', text)
-    text = re.sub(r'\\begin{tabular}{\| l \| l \|}', r'<br><table border="1" align="center">', text)
+    text = re.sub(r'\\begin{tabular}{\| l \| l \|}',
+                  r'<br><table border="1" align="center">', text)
     text = re.sub(r'\\end{tabular}', r'</table>', text)
-    tables = re.findall(r'<table border="1" align="center">(.+?)</table>', text, re.S)
+    tables = re.findall(r'<table border="1" align="center">(.+?)</table>',
+                        text, re.S)
     sub_tables = [sub_table(i) for i in tables]
     for i in range(len(tables)):
         text = text.replace(tables[i], sub_tables[i])
     return text
+
 
 def sub_table(text):
     pattern = re.compile(r'(%.+?)\n')
@@ -34,11 +37,14 @@ def sub_table(text):
     lines = re.findall(r'\b(.+?) & (.+?) \\\\', text)
     tables = ''
     for i in lines:
-        tables += '<tr>\n<td width=400>' + i[0] + '</td><td width=100>' + i[1] + '</td></tr>\n'
+        tables += '<tr>\n<td width=400>' + i[0] + '</td><td width=100>' + i[
+            1] + '</td></tr>\n'
     return tables
 
+
 def get_document(content):
-    document_pattern = re.compile(r'\\begin{document}(.+?)\\end{document}',re.S)
+    document_pattern = re.compile(r'\\begin{document}(.+?)\\end{document}',
+                                  re.S)
     document = re.findall(document_pattern, content)
     return document[0]
 
@@ -86,7 +92,6 @@ def get_section(section_list, content):
     return section_html
 
 
-
 def make_html(path):
     latex_content = open(path, 'r').read()
     latex_content = sub_elements(latex_content)
@@ -101,5 +106,5 @@ def make_html(path):
     html_content += "<p>\n<b>Abstract</b>\n<p>%s\n</p>\n</p>\n\n" % abstract
 
     sections = get_sections(document)
-    html_content+= get_section(sections, document)
+    html_content += get_section(sections, document)
     return html_content
