@@ -1,14 +1,14 @@
 import ply.lex as lex
 
-reserved={
-    'if':'IF',
-    'int':'INT',
-    'while':'WHILE',
-    'if':'IF',
-    'cout':'COUT',
-    'endl':'ENDL',
+reserved = {
+    'if': 'IF',
+    'int': 'INT',
+    'while': 'WHILE',
+    'if': 'IF',
+    'cout': 'COUT',
+    'endl': 'ENDL',
 }
-tokens=[
+tokens = [
     "NUMBER",
     "STRING",
     'EQUAL',
@@ -25,48 +25,53 @@ tokens=[
     'DIVIDE',
     'LPAREN',
     'RPAREN',
-]+list(reserved.values())
+] + list(reserved.values())
 
 print(tokens)
 
-t_EQUAL= r'='
+t_EQUAL = r'='
 t_SEMICOLON = r'\;'
 t_LESSTHAN = r'\<'
 t_INPUT = r'\<\<'
 t_LBIGBRACE = r'\{'
 t_RBIGBRACE = r'\}'
-t_QUOTE= r'\"'
-t_PLUS    = r'\+'
-t_MINUS   = r'-'
-t_TIMES   = r'\*'
-t_DIVIDE  = r'/'
-t_LPAREN  = r'\('
-t_RPAREN  = r'\)'
+t_QUOTE = r'\"'
+t_PLUS = r'\+'
+t_MINUS = r'-'
+t_TIMES = r'\*'
+t_DIVIDE = r'/'
+t_LPAREN = r'\('
+t_RPAREN = r'\)'
 
 
 def t_NUMBER(t):
     r'\d+'
-    t.value = int(t.value)    
+    t.value = int(t.value)
     return t
+
 
 def t_STRING(t):
     r'[a-zA-Z][a-zA-Z0-9]*'
-    t.type = reserved.get(t.value,"ID")  
+    t.type = reserved.get(t.value, "ID")
     return t
+
 
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-t_ignore  = ' \t'
+
+t_ignore = ' \t'
+
 
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
 
+
 lexer = lex.lex()
 
-data='''
+data = '''
 int asd = 0;
 int bc = 10;
 while ( asd < bc)
@@ -80,6 +85,6 @@ while ( asd < bc)
 lexer.input(data)
 
 while True:
-	tok = lexer.token()
-	if not tok: break # No more input
-	print(tok)
+    tok = lexer.token()
+    if not tok: break  # No more input
+    print(tok)
